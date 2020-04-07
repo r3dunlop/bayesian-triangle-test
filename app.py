@@ -3,6 +3,8 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 
+from util.stats import probability_of_x_differentiators, calculate_pvalue
+
 app = dash.Dash(__name__)
 server = app.server
 colors = {
