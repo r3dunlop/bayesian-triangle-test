@@ -2,7 +2,7 @@ from scipy.special import comb
 import numpy as np
 
 
-def probability_of_x_differentiators(x, y, n):
+def probability_of_x_discriminators(x, y, n):
     # x = number of true distinguishers
     # y = number of correct responses
     # n = total number of tasters
@@ -12,12 +12,12 @@ def probability_of_x_differentiators(x, y, n):
 
     return numerator / denominator
 
-def probability_of_more_than_x_differentiators(x, y, n):
+def probability_of_more_than_x_discriminators(x, y, n):
     x_list = list(x)
     rtn_list = []
     for i in x_list:
         r = np.arange(i+1, y+1)
-        rtn_list.append(np.sum(probability_of_x_differentiators(r, y, n)))
+        rtn_list.append(np.sum(probability_of_x_discriminators(r, y, n)))
 
     return rtn_list
 

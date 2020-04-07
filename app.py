@@ -5,7 +5,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State
 
 import numpy as np
-from util.stats import probability_of_x_differentiators, probability_of_more_than_x_differentiators, calculate_pvalue
+from util.stats import probability_of_x_discriminators, probability_of_more_than_x_discriminators, calculate_pvalue
 
 app = dash.Dash(__name__)
 server = app.server
@@ -47,11 +47,11 @@ app.layout = html.Div(children=[
                 ) ,
                 html.H3('p-value: ',id='pvalue'),
                 dcc.Graph(
-                      id='graph-probability-differentiators',
+                      id='graph-probability-discriminators',
           #            animate= True,
                       figure={
                           'data': [
-                              {'x': np.arange(0,24), 'y': probability_of_x_differentiators(np.arange(0,24),12,24), 'type': 'bar', 'name': 'Differentiators'},
+                              {'x': np.arange(0,24), 'y': probability_of_x_discriminators(np.arange(0,24),12,24), 'type': 'bar', 'name': 'Differentiators'},
                           ],
                           'layout': {
                               'title': 'Probability of the number of discriminators',
@@ -65,15 +65,15 @@ app.layout = html.Div(children=[
 
                   ),
                 dcc.Graph(
-                    id='graph-cumulative-probability-differentiators',
+                    id='graph-cumulative-probability-discriminators',
                 #    animate=True,
                     figure={
                         'data': [
-                            {'x': np.arange(0, 24), 'y': probability_of_x_differentiators(np.arange(0, 24), 12, 24), 'type': 'bar',
+                            {'x': np.arange(0, 24), 'y': probability_of_x_discriminators(np.arange(0, 24), 12, 24), 'type': 'bar',
                              'name': 'Differentiators', 'marker' : { "color" : ['crimson']*24}},
                         ],
                         'layout': {
-                            'title': 'Probability of more than x number of differentiators',
+                            'title': 'Probability of more than x number of discriminators',
                             'yaxis': {'title': 'Probability', 'autorange': True},
                             'xaxis': {'title': 'Number of Differentiators', 'autorange': True},
                             'bargap': 0,
@@ -100,15 +100,15 @@ def update_pvalue(n, y):
     n = clean_integer(n)
     return 'p-value: {}'.format(round(calculate_pvalue(y,n),3))
 
-@app.callback([Output('graph-probability-differentiators', 'figure'),
-               Output('graph-cumulative-probability-differentiators', 'figure')],
+@app.callback([Output('graph-probability-discriminators', 'figure'),
+               Output('graph-cumulative-probability-discriminators', 'figure')],
               [Input('input-tasters', 'value'),
                Input('input-correct','value'),
                Input('dd-graph-type','value')],
-              [State('graph-probability-differentiators', 'figure'),
-               State('graph-cumulative-probability-differentiators', 'figure')]
+              [State('graph-probability-discriminators', 'figure'),
+               State('graph-cumulative-probability-discriminators', 'figure')]
               )
-def update_differentiator_graph(n, y, dd_val, pdf, cdf,):
+def update_discriminator_graph(n, y, dd_val, pdf, cdf,):
     y = clean_integer(y)
     n = clean_integer(n)
 
@@ -119,10 +119,10 @@ def update_differentiator_graph(n, y, dd_val, pdf, cdf,):
         mapping = ('proportion', 'number')
 
 
-    pdf['data'] = [{'x': np.arange(0, n)/divisor, 'y': probability_of_x_differentiators(np.arange(0, n), y, n), 'type': 'bar',
+    pdf['data'] = [{'x': np.arange(0, n)/divisor, 'y': probability_of_x_discriminators(np.arange(0, n), y, n), 'type': 'bar',
                'name': 'Differentiators'}]
 
-    cdf['data'] = [{'x': np.arange(0, n)/divisor, 'y': probability_of_more_than_x_differentiators(np.arange(0, n), y, n), 'type': 'bar',
+    cdf['data'] = [{'x': np.arange(0, n)/divisor, 'y': probability_of_more_than_x_discriminators(np.arange(0, n), y, n), 'type': 'bar',
          'name': 'Differentiators','marker':{ "color" : ['crimson']*n}},]
 
     for graph in [pdf,cdf]:
