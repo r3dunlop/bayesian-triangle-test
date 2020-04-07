@@ -75,12 +75,17 @@ app.layout = html.Div(children=[
                 ]
             )
 
+def clean_integer(i):
+    if i is None:
+        return 1
+    return int(i)
+
 @app.callback(Output('pvalue', 'children'),
               [Input('input-tasters', 'value'),
                Input('input-correct','value')])
 def update_pvalue(n, y):
-    n = int(n)
-    y = int(y)
+    y = clean_integer(y)
+    n = clean_integer(n)
     return 'p-value: {}'.format(round(calculate_pvalue(y,n),3))
 
 @app.callback([Output('graph-probability-differentiators', 'figure'),
@@ -91,12 +96,8 @@ def update_pvalue(n, y):
                State('graph-cumulative-probability-differentiators', 'figure')]
               )
 def update_differentiator_graph(n, y, pdf, cdf):
-    if y is None:
-        y = 1
-    if n is None:
-        n = 1
-    y = int(y)
-    n = int(n)
+    y = clean_integer(y)
+    n = clean_integer(n)
     pdf['data'] = [{'x': np.arange(0, n), 'y': probability_of_x_differentiators(np.arange(0, n), y, n), 'type': 'bar',
                'name': 'Differentiators'}]
     cdf['data'] = [{'x': np.arange(0, n), 'y': probability_of_more_than_x_differentiators(np.arange(0, n), y, n), 'type': 'bar',
